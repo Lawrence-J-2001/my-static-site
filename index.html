@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+
+        header {
+            background-color: #3a3939;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        section {
+            margin: 20px;
+        }
+
+        #quiz-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #question {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #choices button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: rgb(123, 182, 36);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #choices button:hover {
+            background-color: greenyellow;
+        }
+
+        #result {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #next-btn {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #next-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Lawrence's Static Website</h1>
+    </header>
+
+    <div>
+        <img src="mario.jpg">
+        <img src="luigi.jpg">
+    </div>
+
+    <section>
+        <h2>About</h2>
+        <p>This webpage is about the Super Mario series; below is a mini quiz about the franchise.</p>
+    </section>
+
+    <section id="quiz-section">
+        <h3>Super Mario Quiz</h3>
+        <div id="question"></div>
+        <div id="choices"></div>
+        <div id="result"></div>
+        <button id="next-btn" style="display: none;">Next</button>
+    </section>
+
+    <script>
+        const quizQuestions = [
+            {
+                question: "What is the relationship between Mario and Luigi?",
+                choices: {
+                    1: 'Cousins',
+                    2: 'Brothers',
+                    3: 'Best Friends'
+                },
+                answer: '2'    
+            },
+            {
+                question: "Which videogame marked Mario's first debut?",
+                choices: {
+                    1: 'Donkey Kong',
+                    2: 'Mario Bros',
+                    3: 'Super Smash Bros'
+                },
+                answer: '1'
+            },
+            {
+                question: "Who was the first damsel-in-distress in the Mario Franchise?",
+                choices: {
+                    1: 'Princess Daisy',
+                    2: 'Pauline',
+                    3: 'Princess Peach'
+                },
+                answer: '2'
+            },
+            {
+                question: "The main antagonist of the Mario series is...",
+                choices: {
+                    1: "Wario",
+                    2: "Donkey Kong",
+                    3: "Bowser"
+                },
+                answer: '3'
+            }            
+        ];
+
+        const questionElement = document.getElementById('question');
+        const choicesElement = document.getElementById('choices');
+        const resultElement = document.getElementById('result');
+        const nextButton = document.getElementById('next-btn');
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function displayQuestion() {
+            const current = quizQuestions[currentQuestion];
+            questionElement.textContent = current.question;
+
+            choicesElement.innerHTML = '';
+            for (const choice in current.choices) {
+                const button = document.createElement('button');
+                button.textContent = current.choices[choice];
+                button.dataset.choice = choice;
+                button.addEventListener('click', checkAnswer);
+                choicesElement.appendChild(button);
+            }
+        }
+
+        function checkAnswer(event) {
+            const selectedChoice = event.target.dataset.choice;
+            const current = quizQuestions[currentQuestion];
+            if (selectedChoice === current.answer) {
+                resultElement.textContent = 'Correct!';
+                score++;
+            } else {
+                resultElement.textContent = 'Incorrect!';
+            }
+
+            nextButton.style.display = 'block';
+            this.removeEventListener('click', checkAnswer);
+        }
+
+        function displayResult() {
+            questionElement.textContent = '';
+            choicesElement.textContent = '';
+            resultElement.textContent = `You scored ${score} out of ${quizQuestions.length}.`;
+            nextButton.style.display = 'none';
+        }
+
+        nextButton.addEventListener('click', () => {
+            currentQuestion++;
+            if (currentQuestion < quizQuestions.length) {
+                displayQuestion();
+                resultElement.textContent = '';
+            } else {
+                displayResult();
+            }
+        });
+
+        displayQuestion();
+    </script>
+</body>
+</html>
